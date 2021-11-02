@@ -5,15 +5,10 @@ import com.microsoft.aad.msal4j.ClientCredentialFactory;
 import com.microsoft.aad.msal4j.ClientCredentialParameters;
 import com.microsoft.aad.msal4j.ConfidentialClientApplication;
 import com.microsoft.aad.msal4j.IAuthenticationResult;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
@@ -24,6 +19,11 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+
+import org.neo4j.driver.*;
+
+import static org.neo4j.driver.Values.parameters;
 
 class ClientCredentialGrant {
 
@@ -32,16 +32,22 @@ class ClientCredentialGrant {
     private static String scope;
     private static String keyPath;
     private static String certPath;
+    private static Config config;
 
-    public static void main(String args[]) throws Exception{
+    public static void main(String args[]) throws Exception {
 
         setUpSampleData();
 
+       // String mySSOToken = "";
+
+
+
         try {
             IAuthenticationResult result = getAccessTokenByClientCredentialGrant();
-            String usersListFromGraph = getUsersListFromGraph(result.accessToken());
+            simpleSampleUsingAccessToken(result.accessToken());
+            impersonationSampleUsingUsernamePassword("");
 
-            System.out.println("Users in the Tenant = " + usersListFromGraph);
+            System.out.println("Did something");
             System.out.println("Press any key to exit ...");
             System.in.read();
 
@@ -77,34 +83,46 @@ class ClientCredentialGrant {
         return future.get();
     }
 
-    private static String getUsersListFromGraph(String accessToken) throws IOException {
-        URL url = new URL("https://graph.microsoft.com/v1.0/users");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    private static void simpleSampleUsingAccessToken(String accessToken)  {
+        String myToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiIyN2EyMTMxYS01MmRjLTRhNTctYmI0My1kN2Y3NTNjNDRjN2EiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vNTU1ZWU3ZGQtNTUyNi00YjNkLWEzNWYtYjg1MjYzYjExNGU3L3YyLjAiLCJpYXQiOjE2MzU3ODM1NjQsIm5iZiI6MTYzNTc4MzU2NCwiZXhwIjoxNjM1Nzg3NDY0LCJhaW8iOiJBV1FBbS84VEFBQUFMeDdWZEIyZW1BMTBXTkpCRlNpT3FBWGJIV3ptcE80ajN3bXQwdTNyYUk1aGYxREZjbVgxcU9HSHlZOWZwdHNnazJvYnZxSFhUOTMzTWFQU1ZML0h0cHRrdmU3Ymk0SVBOOHVjQWREQitpL3pqa2NFblgxVHl3ZGhGQUlpVE1NOSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0LzkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZC8iLCJuYW1lIjoiUmljaCBNYWNhc2tpbGwiLCJvaWQiOiJhMmZlYzRiNS1hYzk0LTQ2YWUtODA3Ni1mZGYxNDMzZGZjY2UiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJyaWNoYXJkLm1hY2Fza2lsbEBvdXRsb29rLmNvbSIsInJoIjoiMC5BUXNBM2VkZVZTWlZQVXVqWDdoU1k3RVU1eG9Ub2lmY1VsZEt1MFBYOTFQRVRIb0xBSDAuIiwicm9sZXMiOlsiYWRtaW4iXSwic3ViIjoieWNmOG40YmtGN3p5aGY0eVh0cm42UWtWMEtqM1ZlYldSMlRHMDZfczZINCIsInRpZCI6IjU1NWVlN2RkLTU1MjYtNGIzZC1hMzVmLWI4NTI2M2IxMTRlNyIsInV0aSI6Im5wSUlxWWdzemt5cGRUMXMtOEdUQUEiLCJ2ZXIiOiIyLjAifQ.Endk9WF9vW6oBDEZWUSskyHryJdpeVfa7A0tGOFlNUoBzCMf0PrT3guqpnxRpLEX4XgVeedaHvS4VAsSbz5pnUuW1CMaPocfSxoAy2Gqzc8JbGgS6ROTc8BcTLFVfyfQv02dGKPuCowEFxCe6pTE9e92G_nl4oqV_XfId73VKT52YWjK7OWreTJGnhwKqmL4SkpD66n_L9kH-MRpUSBiy1_IRxOVr8dBiG2HkJkL-zjJEmThCo5eA_-auMS0JV-D3djU3DRShZA3T2AJq4JEhsO3lLO37xrl1cweuLE8mK8uMUgZNe13lAFEYC8royujp9UNyL5M2qPzIofN1L_zlA";
 
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-        conn.setRequestProperty("Accept","application/json");
+        Driver driver = GraphDatabase.driver("neo4j://localhost:7617",
+                AuthTokens.bearer(myToken),
+                config = Config.builder().withLogging(Logging.console(Level.FINE)).build());
 
-        int httpResponseCode = conn.getResponseCode();
-        if(httpResponseCode == HTTPResponse.SC_OK) {
 
-            StringBuilder response;
-            try(BufferedReader in = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream()))){
-
-                String inputLine;
-                response = new StringBuilder();
-                while (( inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-            }
-            return response.toString();
-        } else {
-            return String.format("Connection returned HTTP code: %s with message: %s",
-                    httpResponseCode, conn.getResponseMessage());
+        try (Session session = driver.session(SessionConfig.builder().build())) {
+            String greeting = session.writeTransaction(tx -> {
+                Result result = tx.run("CREATE (a:Greeting) " +
+                                "SET a.message = $message " +
+                                "RETURN a.message + ', from node ' + id(a)",
+                        parameters("message", "Hello"));
+                return result.single().get(0).asString();
+            });
+            System.out.println(greeting);
         }
     }
+    private static void impersonationSampleUsingUsernamePassword(String accessToken)  {
 
+        Driver driver = GraphDatabase.driver("neo4j://localhost:7617",
+                AuthTokens.basic("neo4j","Berlin99!"),
+                config = Config.builder().withLogging(Logging.console(Level.FINE)).build());
+
+
+        try (Session session = driver.session(SessionConfig.builder().withImpersonatedUser("Bob").build())) {
+            String greeting = session.writeTransaction(new TransactionWork<String>() {
+                @Override
+                public String execute(Transaction tx) {
+                    Result result = tx.run("CREATE (a:Greeting) " +
+                                    "SET a.message = $message " +
+                                    "RETURN a.message + ', from node ' + id(a)",
+                            parameters("message", "Hello"));
+                    return result.single().get(0).asString();
+                }
+            });
+            System.out.println(greeting);
+        }
+    }
     /**
      * Helper function unique to this sample setting. In a real application these wouldn't be so hardcoded, for example
      * different users may need different authority endpoints and the key/cert paths could come from a secure keyvault
