@@ -43,9 +43,9 @@ class ClientCredentialGrant {
 
 
         try {
-            IAuthenticationResult result = getAccessTokenByClientCredentialGrant();
-            simpleSampleUsingAccessToken(result.accessToken());
-            impersonationSampleUsingUsernamePassword("");
+            // IAuthenticationResult result = getAccessTokenByClientCredentialGrant();
+           simpleSampleUsingAccessToken("");
+           // impersonationSampleUsingUsernamePassword("");
 
             System.out.println("Did something");
             System.out.println("Press any key to exit ...");
@@ -57,6 +57,7 @@ class ClientCredentialGrant {
             throw ex;
         }
     }
+
 
     private static IAuthenticationResult getAccessTokenByClientCredentialGrant() throws Exception {
 
@@ -84,7 +85,7 @@ class ClientCredentialGrant {
     }
 
     private static void simpleSampleUsingAccessToken(String accessToken)  {
-        String myToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiIyN2EyMTMxYS01MmRjLTRhNTctYmI0My1kN2Y3NTNjNDRjN2EiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vNTU1ZWU3ZGQtNTUyNi00YjNkLWEzNWYtYjg1MjYzYjExNGU3L3YyLjAiLCJpYXQiOjE2MzU3ODM1NjQsIm5iZiI6MTYzNTc4MzU2NCwiZXhwIjoxNjM1Nzg3NDY0LCJhaW8iOiJBV1FBbS84VEFBQUFMeDdWZEIyZW1BMTBXTkpCRlNpT3FBWGJIV3ptcE80ajN3bXQwdTNyYUk1aGYxREZjbVgxcU9HSHlZOWZwdHNnazJvYnZxSFhUOTMzTWFQU1ZML0h0cHRrdmU3Ymk0SVBOOHVjQWREQitpL3pqa2NFblgxVHl3ZGhGQUlpVE1NOSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0LzkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZC8iLCJuYW1lIjoiUmljaCBNYWNhc2tpbGwiLCJvaWQiOiJhMmZlYzRiNS1hYzk0LTQ2YWUtODA3Ni1mZGYxNDMzZGZjY2UiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJyaWNoYXJkLm1hY2Fza2lsbEBvdXRsb29rLmNvbSIsInJoIjoiMC5BUXNBM2VkZVZTWlZQVXVqWDdoU1k3RVU1eG9Ub2lmY1VsZEt1MFBYOTFQRVRIb0xBSDAuIiwicm9sZXMiOlsiYWRtaW4iXSwic3ViIjoieWNmOG40YmtGN3p5aGY0eVh0cm42UWtWMEtqM1ZlYldSMlRHMDZfczZINCIsInRpZCI6IjU1NWVlN2RkLTU1MjYtNGIzZC1hMzVmLWI4NTI2M2IxMTRlNyIsInV0aSI6Im5wSUlxWWdzemt5cGRUMXMtOEdUQUEiLCJ2ZXIiOiIyLjAifQ.Endk9WF9vW6oBDEZWUSskyHryJdpeVfa7A0tGOFlNUoBzCMf0PrT3guqpnxRpLEX4XgVeedaHvS4VAsSbz5pnUuW1CMaPocfSxoAy2Gqzc8JbGgS6ROTc8BcTLFVfyfQv02dGKPuCowEFxCe6pTE9e92G_nl4oqV_XfId73VKT52YWjK7OWreTJGnhwKqmL4SkpD66n_L9kH-MRpUSBiy1_IRxOVr8dBiG2HkJkL-zjJEmThCo5eA_-auMS0JV-D3djU3DRShZA3T2AJq4JEhsO3lLO37xrl1cweuLE8mK8uMUgZNe13lAFEYC8royujp9UNyL5M2qPzIofN1L_zlA";
+        String myToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiIyN2EyMTMxYS01MmRjLTRhNTctYmI0My1kN2Y3NTNjNDRjN2EiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vNTU1ZWU3ZGQtNTUyNi00YjNkLWEzNWYtYjg1MjYzYjExNGU3L3YyLjAiLCJpYXQiOjE2MzYwMzQ4NDYsIm5iZiI6MTYzNjAzNDg0NiwiZXhwIjoxNjM2MDM4NzQ2LCJhaW8iOiJBV1FBbS84VEFBQUFIUW5jbVkwVnZoZ3lNSWhmbGVIWDNMMlZjREJKa3EvaFJKSE1vMVpzbmozMHJrL2FOVU05S3NDSThxYVFqMmRjY2VJa2NQNlVRVmp2SDZDMTBsbkpPc2NPR2lGZW11NlNQQ3lNa21kRzhkNGNwUGRaaHBFNHdFaUJzdUFPY2pIQyIsImVtYWlsIjoicmljaGFyZC5tYWNhc2tpbGxAb3V0bG9vay5jb20iLCJpZHAiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC85MTg4MDQwZC02YzY3LTRjNWItYjExMi0zNmEzMDRiNjZkYWQvIiwibmFtZSI6IlJpY2ggTWFjYXNraWxsIiwib2lkIjoiYTJmZWM0YjUtYWM5NC00NmFlLTgwNzYtZmRmMTQzM2RmY2NlIiwicHJlZmVycmVkX3VzZXJuYW1lIjoicmljaGFyZC5tYWNhc2tpbGxAb3V0bG9vay5jb20iLCJyaCI6IjAuQVFzQTNlZGVWU1pWUFV1alg3aFNZN0VVNXhvVG9pZmNVbGRLdTBQWDkxUEVUSG9MQUgwLiIsInJvbGVzIjpbImFkbWluIl0sInN1YiI6InljZjhuNGJrRjd6eWhmNHlYdHJuNlFrVjBLajNWZWJXUjJURzA2X3M2SDQiLCJ0aWQiOiI1NTVlZTdkZC01NTI2LTRiM2QtYTM1Zi1iODUyNjNiMTE0ZTciLCJ1dGkiOiJWRlFWekVaRnowT1lZQXFPNW9vd0FBIiwidmVyIjoiMi4wIn0.F_MbE4AthT1G6PFEZ24Wu3UjBt7ltnnITVd0HCbdMdcEhPR4PYfJkHK5FOi-Nhd19X_X0GQ3QSQqWfSn6-uOeJa36DeEeKLRO-ZZWXng4JDVVgxPeniL1XRd09lYd_3WJJIthGR9HCB4UsqDD2K-KZyw2Q7tDUktazSgQrMSKSNauxx9X_hm2ryLItTXqtVQ9O9ZtEghVLbhN2vkgWgSZqzwpRlz_TuDbQQzgBJVguS8xEH2ldy_PB-3ZFs_wS0fBQlP2pBwiPDe0kv6hIG6svhPMZMHQ9L__zY88WotI9kVYqR1qAUCgYSqQS5T9nnoKzEJXhjjOvRUgAz5nqHP9g";
 
         Driver driver = GraphDatabase.driver("neo4j://localhost:7617",
                 AuthTokens.bearer(myToken),
@@ -105,8 +106,9 @@ class ClientCredentialGrant {
     private static void impersonationSampleUsingUsernamePassword(String accessToken)  {
 
         Driver driver = GraphDatabase.driver("neo4j://localhost:7617",
-                AuthTokens.basic("neo4j","Berlin99!"),
-                config = Config.builder().withLogging(Logging.console(Level.FINE)).build());
+                AuthTokens.basic("neo4j","Berlin99!"));
+
+                //config = Config.builder().withLogging(Logging.console(Level.FINE)).build());
 
 
         try (Session session = driver.session(SessionConfig.builder().withImpersonatedUser("Bob").build())) {
